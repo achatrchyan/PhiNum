@@ -1,0 +1,13 @@
+var="#include <fftw3-mpi.h>"
+sed -i "5s/.*/$var/" clusterfft.cpp
+var2="#define longdouble 1"
+sed -i "13s/.*/$var2/" parameters.cpp
+
+mpic++ -o main main.cpp -lfftw3l_mpi -lfftw3l -lm -O3 -mtune=corei7 -msse4.2 -march=corei7 -fprefetch-loop-arrays -funroll-all-loops -ffast-math
+
+var="#include <\/home\/achatrch\/FFTW\/include\/fftw3-mpi.h>"
+sed -i "5s/.*/$var/" clusterfft.cpp
+var2="#define longdouble 0"
+sed -i "13s/.*/$var2/" parameters.cpp
+
+mpiexec -np 1  main

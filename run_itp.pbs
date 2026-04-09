@@ -1,0 +1,9 @@
+var="#include <fftw3-mpi.h>"
+sed -i "5s/.*/$var/" clusterfft.cpp
+
+mpic++ -o main main.cpp -lfftw3_mpi -lfftw3 -lm -O3 -mtune=corei7 -msse4.2 -march=corei7 -fprefetch-loop-arrays -funroll-all-loops -ffast-math
+
+var="#include <\/home\/achatrch\/FFTW\/include\/fftw3-mpi.h>"
+sed -i "5s/.*/$var/" clusterfft.cpp
+
+mpiexec -np 1  main

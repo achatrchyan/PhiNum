@@ -1,0 +1,2 @@
+mpic++ -o main main.cpp -L/home/achatrch/FFTW/lib -lfftw3_mpi -lfftw3 -lm -O3 -msse4.2  -fprefetch-loop-arrays -funroll-all-loops -ffast-math
+mpirun -np 1  ./main
