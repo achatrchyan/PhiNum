@@ -33,6 +33,12 @@ Konfig::Konfig(char* nev ,long double ertek)
   last=first;
 }
 
+Konfig::Konfig(char* nev ,float ertek)
+{
+  first = new Konfitem(nev,ertek);
+  last=first;
+}
+
 Konfig::Konfig(char* nev ,int ertek)
 {
   first = new Konfitem(nev,ertek);
@@ -151,6 +157,12 @@ void Konfig::Newitem(char* nev,long double ert)
  last=last->Getnext();
 }
 
+void Konfig::Newitem(char* nev,float ert)
+{
+ last->Setnext(new Konfitem(nev,ert));
+ last=last->Getnext();
+}
+
 void Konfig::Newitem(char* nev,int ert)
 { 
  last->Setnext(new Konfitem(nev,ert));
@@ -195,6 +207,16 @@ void Konfig::Set(char* nev,long double ertek)
  mutato->Setval(ertek);
 }
 
+void Konfig::Set(char* nev,float ertek)
+{ Konfitem * mutato=exists(nev); 
+ if (mutato==NULL) 
+ {  
+    strncpy(tempb,nev,K_BHOSSZ);
+    strip(tempb);
+    Newitem(tempb,ertek); return; 
+    }
+ mutato->Setval(ertek);
+}
 
 void Konfig::Set(char* nev,int ertek)
 { Konfitem * mutato=exists(nev); 
@@ -238,6 +260,13 @@ int  Konfig::Getval(const char *nev,long double& ide) const
 { Konfitem *ezaz=exists(nev);
  if (ezaz==NULL) return 1;
  ide=atof(ezaz->Getval());
+ return 0;
+}
+
+int  Konfig::Getval(const char *nev,float& ide) const
+{ Konfitem *ezaz=exists(nev);
+ if (ezaz==NULL) return 1;
+ ide=(float)atof(ezaz->Getval());
  return 0;
 }
 
@@ -308,6 +337,12 @@ Konfitem::Konfitem(char* nev,long double ert)
   next=NULL;
 }
 
+Konfitem::Konfitem(char* nev,float ert)
+{  
+  Setname(nev);
+  Setval(ert);
+  next=NULL;
+}
 
 Konfitem::Konfitem(char* nev,int ert)
 {  
@@ -339,6 +374,11 @@ void Konfitem::Setval(int szam)
 }
 
 void Konfitem::Setval(double szam)
+{ 
+  snprintf(ertek,K_BHOSSZ,"%g",szam);
+}
+
+void Konfitem::Setval(float szam)
 { 
   snprintf(ertek,K_BHOSSZ,"%g",szam);
 }

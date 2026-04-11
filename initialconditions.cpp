@@ -309,8 +309,8 @@ void SetInitialConditions()
 
 					//TODO
 					//Complex Amplitude including occupation number
-					F1=sqrt(Occupation)*gauss1*std::complex<pseudo_double>(cos(phase1),sin(phase1));
-					F2=sqrt(Occupation)*gauss2*std::complex<pseudo_double>(cos(phase2),sin(phase2));
+					F1=(pseudo_double)(sqrt(Occupation)*gauss1)*std::complex<pseudo_double>(cos(phase1),sin(phase1));
+					F2=(pseudo_double)(sqrt(Occupation)*gauss2)*std::complex<pseudo_double>(cos(phase2),sin(phase2));
 			
 					  
 				
@@ -560,8 +560,8 @@ void SetInitialConditions()
 
 					//TODO
 					//Complex Amplitude including occupation number
-					F1=sqrt(Occupation)*gauss1*std::complex<pseudo_double>(cos(phase1),sin(phase1));
-					F2=sqrt(Occupation)*gauss2*std::complex<pseudo_double>(cos(phase2),sin(phase2));
+					F1=(pseudo_double)(sqrt(Occupation)*gauss1)*std::complex<pseudo_double>(cos(phase1),sin(phase1));
+					F2=(pseudo_double)(sqrt(Occupation)*gauss2)*std::complex<pseudo_double>(cos(phase2),sin(phase2));
 			
 					//INITIALIZE MODES IN MOMENTUM SPACE
 					

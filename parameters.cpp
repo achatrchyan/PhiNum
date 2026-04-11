@@ -7,30 +7,58 @@
 /*=======Parameters=========*/
 
 //Simulation parameters
-int runs=2;
+int runs=10.;
 int runID;
 
-#define longdouble 0
+#define doubleprecision 0
 
-#if (longdouble == 0)
-#define pseudo_double double
-
+#if (doubleprecision == -1)
+#define pseudo_double float
+#define MPI_PSEUDO_DOUBLE MPI_FLOAT
 #define really_double double
+
+#define p_fftw_complex fftwf_complex
+#define p_fftw_plan fftwf_plan
+#define p_fftw_mpi_init fftwf_mpi_init
+#define p_fftw_mpi_local_size_3d fftwf_mpi_local_size_3d
+#define p_fftw_alloc_real fftwf_alloc_real
+#define p_fftw_alloc_complex fftwf_alloc_complex
+#define p_fftw_mpi_plan_dft_r2c_3d fftwf_mpi_plan_dft_r2c_3d
+#define p_fftw_mpi_plan_dft_c2r_3d fftwf_mpi_plan_dft_c2r_3d
+#define p_fftw_destroy_plan fftwf_destroy_plan
+#define p_fftw_execute fftwf_execute
 #endif
 
-#if (longdouble == 1)
+#if (doubleprecision == 0)
+#define pseudo_double double
+#define MPI_PSEUDO_DOUBLE MPI_DOUBLE
+#define really_double double
+
+#define p_fftw_complex fftw_complex
+#define p_fftw_plan fftw_plan
+#define p_fftw_mpi_init fftw_mpi_init
+#define p_fftw_mpi_local_size_3d fftw_mpi_local_size_3d
+#define p_fftw_alloc_real fftw_alloc_real
+#define p_fftw_alloc_complex fftw_alloc_complex
+#define p_fftw_mpi_plan_dft_r2c_3d fftw_mpi_plan_dft_r2c_3d
+#define p_fftw_mpi_plan_dft_c2r_3d fftw_mpi_plan_dft_c2r_3d
+#define p_fftw_destroy_plan fftw_destroy_plan
+#define p_fftw_execute fftw_execute
+#endif
+
+#if (doubleprecision == 1)
 #define pseudo_double long double
-#define MPI_DOUBLE MPI_LONG_DOUBLE
-#define fftw_complex fftwl_complex
-#define fftw_plan fftwl_plan
-#define fftw_mpi_init fftwl_mpi_init
-#define fftw_mpi_local_size_3d fftwl_mpi_local_size_3d
-#define fftw_alloc_real fftwl_alloc_real
-#define fftw_alloc_complex fftwl_alloc_complex
-#define fftw_mpi_plan_dft_r2c_3d fftwl_mpi_plan_dft_r2c_3d
-#define fftw_mpi_plan_dft_c2r_3d fftwl_mpi_plan_dft_c2r_3d
-#define fftw_destroy_plan fftwl_destroy_plan
-#define fftw_execute fftwl_execute
+#define MPI_PSEUDO_DOUBLE MPI_LONG_DOUBLE
+#define p_fftw_complex fftwl_complex
+#define p_fftw_plan fftwl_plan
+#define p_fftw_mpi_init fftwl_mpi_init
+#define p_fftw_mpi_local_size_3d fftwl_mpi_local_size_3d
+#define p_fftw_alloc_real fftwl_alloc_real
+#define p_fftw_alloc_complex fftwl_alloc_complex
+#define p_fftw_mpi_plan_dft_r2c_3d fftwl_mpi_plan_dft_r2c_3d
+#define p_fftw_mpi_plan_dft_c2r_3d fftwl_mpi_plan_dft_c2r_3d
+#define p_fftw_destroy_plan fftwl_destroy_plan
+#define p_fftw_execute fftwl_execute
 
 #define really_double double
 #endif

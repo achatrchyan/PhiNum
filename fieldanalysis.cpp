@@ -261,10 +261,12 @@ void SaveConfig(int Name)
   
   for (int Kooo=pos(0,0,1); Kooo < Nc*sqr(N_t)*(LocalLattice::N_eta_loc+1); Kooo++ )
   {
-#if (longdouble == 0)      
-    fprintf (of,"%e %e\n", LocalLattice::Phi[Kooo], LocalLattice::Pi[Kooo]);
-#elif (longdouble == 1)
-    fprintf (of,"%Le %Le\n", LocalLattice::Phi[Kooo], LocalLattice::Pi[Kooo]);
+#if (doubleprecision == -1)      
+	  fprintf (of,"%.9e %.9e\n", LocalLattice::Phi[Kooo], LocalLattice::Pi[Kooo]);
+#elif (doubleprecision == 0)      
+    fprintf (of,"%.17e %.17e\n", LocalLattice::Phi[Kooo], LocalLattice::Pi[Kooo]);
+#elif (doubleprecision == 1)
+    fprintf (of,"%.21Le %.21Le\n", LocalLattice::Phi[Kooo], LocalLattice::Pi[Kooo]);
 #endif
   }
   fclose(of);
@@ -291,9 +293,11 @@ void ExtractConfig(int Name)
   
   for (int Kooo=pos(0,0,1); Kooo < Nc*sqr(N_t)*(N_eta_loc+1); Kooo++ )
   {
-#if (longdouble == 0)      
+#if (doubleprecision == -1)      
+	  fscanf(of, "%f %f\n", Phi + Kooo, Pi + Kooo);
+#elif (doubleprecision == 0)      
 	  fscanf(of, "%lf %lf\n", Phi + Kooo, Pi + Kooo);
-#elif (longdouble == 1)
+#elif (doubleprecision == 1)
     fscanf (of,"%Le %Le\n", Phi+Kooo, Pi+Kooo);
 #endif
   }
@@ -352,15 +356,15 @@ void CalculateExtrema()
   
   MPI_Barrier(MPI_COMM_WORLD);
   
-  MPI_Reduce(&maxPhi, &GlmaxPhi, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
-  MPI_Reduce(&minPhi, &GlminPhi, 1, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
-  MPI_Reduce(&maxAbsPhi, &GlmaxAbsPhi, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&maxPhi, &GlmaxPhi, 1, MPI_PSEUDO_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&minPhi, &GlminPhi, 1, MPI_PSEUDO_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&maxAbsPhi, &GlmaxAbsPhi, 1, MPI_PSEUDO_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
   
   MPI_Barrier(MPI_COMM_WORLD);
   
-  MPI_Bcast(&GlmaxPhi, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  MPI_Bcast(&GlminPhi, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  MPI_Bcast(&GlmaxAbsPhi, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&GlmaxPhi, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&GlminPhi, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&GlmaxAbsPhi, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
   
   MPI_Barrier(MPI_COMM_WORLD);		
   
@@ -651,16 +655,16 @@ void CalculateVolumeAverages()
   
   MPI_Barrier(MPI_COMM_WORLD);
 
-  MPI_Reduce(&Energy, &avgEnergy, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-  MPI_Reduce(&Interaction, &avgInteraction, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-  MPI_Reduce(&Charge, &avgCharge, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-  MPI_Reduce(phi, avgphi, Nc, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-  MPI_Reduce(pi, avgpi, Nc, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-  MPI_Reduce(&phi2, &avgphi2, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-  MPI_Reduce(&phi4, &avgphi4, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-  MPI_Reduce(&phi6, &avgphi6, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-  MPI_Reduce(&pi2, &avgpi2, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-  MPI_Reduce(&phipi, &avgphipi, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&Energy, &avgEnergy, 1, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&Interaction, &avgInteraction, 1, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&Charge, &avgCharge, 1, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(phi, avgphi, Nc, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(pi, avgpi, Nc, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&phi2, &avgphi2, 1, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&phi4, &avgphi4, 1, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&phi6, &avgphi6, 1, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&pi2, &avgpi2, 1, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&phipi, &avgphipi, 1, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
   	
   if (ID==0)
   {
@@ -682,16 +686,16 @@ void CalculateVolumeAverages()
 
   MPI_Barrier(MPI_COMM_WORLD);
 
-  MPI_Bcast(&avgEnergy, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  MPI_Bcast(&avgInteraction, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  MPI_Bcast(&avgCharge, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  MPI_Bcast(avgphi, Nc, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  MPI_Bcast(avgpi, Nc, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  MPI_Bcast(&avgphi2, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  MPI_Bcast(&avgphi4, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  MPI_Bcast(&avgphi6, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  MPI_Bcast(&avgpi2, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  MPI_Bcast(&avgphipi, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&avgEnergy, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&avgInteraction, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&avgCharge, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(avgphi, Nc, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(avgpi, Nc, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&avgphi2, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&avgphi4, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&avgphi6, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&avgpi2, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&avgphipi, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
 }
 
 void Print_Extrema()

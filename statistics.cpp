@@ -16,11 +16,11 @@ namespace Statistic
     
     const int nnnnn = 200;
     
-    long long islands_phi0_r[nnnnn][nnnnn];
-    long long islands_phi0_r0[nnnnn][nnnnn];
+    int islands_phi0_r[nnnnn][nnnnn];
+    int islands_phi0_r0[nnnnn][nnnnn];
  
-    long long totislands_phi0_r[nnnnn][nnnnn];
-    long long totislands_phi0_r0[nnnnn][nnnnn];
+    int totislands_phi0_r[nnnnn][nnnnn];
+    int totislands_phi0_r0[nnnnn][nnnnn];
 
     void init()
     {
@@ -68,8 +68,8 @@ void output_stat()
     using namespace LocalLattice;
     using namespace island_analysis;
 
-	MPI_Reduce(islands_phi0_r, totislands_phi0_r, nnnnn*nnnnn, MPI_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
-	MPI_Reduce(islands_phi0_r0, totislands_phi0_r0, nnnnn*nnnnn, MPI_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
+	MPI_Reduce(islands_phi0_r, totislands_phi0_r, nnnnn*nnnnn, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+	MPI_Reduce(islands_phi0_r0, totislands_phi0_r0, nnnnn*nnnnn, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
   	MPI_Barrier(MPI_COMM_WORLD);
   
   	if (ID==0)
@@ -80,25 +80,25 @@ void output_stat()
     	fout.open(fname);
     	for (int i=0;i<nnnnn;i++)
         	for (int j=0;j<nnnnn;j++)
-            	fout<<i*(5.*thres/nnnnn)<<' '<<j*(5./QS/nnnnn)<<' '<<totislands_phi0_r[i][j]/( 5.*thres/(pseudo_double)(nnnnn) )/ (5./QS/nnnnn) /(long double)(runs)/(long double)(N_t)/(long double)(N_t)/(long double)(N_t)/a_t/a_t/a_t<<' '<<totislands_phi0_r0[i][j]/(5.*thres/(pseudo_double)(nnnnn) )/(5./QS/nnnnn)/(long double)(runs)/(long double)(N_t)/(long double)(N_t)/(long double)(N_t)/a_t/a_t/a_t<<endl;
+            	fout<<i*(5.*thres/nnnnn)<<' '<<j*(5./QS/nnnnn)<<' '<<totislands_phi0_r[i][j]/( 5.*thres/(pseudo_double)(nnnnn) )/ (5./QS/nnnnn) /(pseudo_double)(runs)/(pseudo_double)(N_t)/(pseudo_double)(N_t)/(pseudo_double)(N_t)/a_t/a_t/a_t<<' '<<totislands_phi0_r0[i][j]/(5.*thres/(pseudo_double)(nnnnn) )/(5./QS/nnnnn)/(pseudo_double)(runs)/(pseudo_double)(N_t)/(pseudo_double)(N_t)/(pseudo_double)(N_t)/a_t/a_t/a_t<<endl;
     	fout.close();
 
     	snprintf(fname,256,"./output/%i/islands_stat_1d.txt",LASTRUN);
     	fout.open(fname);
     	for (int i=0;i<nnnnn;i++)
     	{
-       		long long s=0;
+       		int s=0;
         	for (int j=0;j<nnnnn;j++)
             	s+=totislands_phi0_r[i][j];
-        	fout<<i*(5*thres/nnnnn)<<' '<<(long double)(s)/(5*thres/nnnnn)/(long double)(runs)/(long double)(N_t)/(long double)(N_t)/(long double)(N_t)/a_t/a_t/a_t<<endl;
+        	fout<<i*(5*thres/nnnnn)<<' '<<(pseudo_double)(s)/(5*thres/nnnnn)/(pseudo_double)(runs)/(pseudo_double)(N_t)/(pseudo_double)(N_t)/(pseudo_double)(N_t)/a_t/a_t/a_t<<endl;
     	}
     	fout.close();
 
-	    long long s =0;
+	    int s =0;
    	 	for (int i=0;i<nnnnn;i++)
         	for (int j=0;j<nnnnn;j++)
            	 	s+=totislands_phi0_r[i][j];
-    	cout<<s<<' '<<(long double)(s)/(long double)(runs)/(long double)(N_t)/(long double)(N_t)/(long double)(N_t)/a_t/a_t/a_t<<endl;
+    	cout<<s<<' '<<(pseudo_double)(s)/(pseudo_double)(runs)/(pseudo_double)(N_t)/(pseudo_double)(N_t)/(pseudo_double)(N_t)/a_t/a_t/a_t<<endl;
     
     	delete[] fname;
 	}

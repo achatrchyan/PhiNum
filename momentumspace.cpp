@@ -168,10 +168,10 @@ void Calculate_CorrelationFunctions()
   for (int Kooo=pos(0,0,1); Kooo < Nc*sqr(N_t)*(LocalLattice::N_eta_loc+1); Kooo++ )
     aavden+=LocalLattice::Delta[Kooo];
   MPI_Barrier(MPI_COMM_WORLD);
-  MPI_Reduce(&aavden, &Aavden, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&aavden, &Aavden, 1, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
   
   MPI_Barrier(MPI_COMM_WORLD);
-  MPI_Bcast(&Aavden, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&Aavden, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
   MPI_Barrier(MPI_COMM_WORLD);
   Aavden/= ((pseudo_double) (N_t*N_t*N_t));
   for (int Kooo=pos(0,0,1); Kooo < Nc*sqr(N_t)*(LocalLattice::N_eta_loc+1); Kooo++ )
@@ -264,11 +264,11 @@ void Calculate_CorrelationFunctions()
     }
         
     //sum up all the spectra
-    MPI_Reduce(CorrF, TotalCorrF, Nc*nTBins, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-    MPI_Reduce(CorrK, TotalCorrK, Nc*nTBins, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-    MPI_Reduce(CorrQ, TotalCorrQ, Nc*nTBins, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(CorrF, TotalCorrF, Nc*nTBins, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(CorrK, TotalCorrK, Nc*nTBins, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(CorrQ, TotalCorrQ, Nc*nTBins, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 #if (withEnergyPS==1)
-    MPI_Reduce(CorrD, TotalCorrD, Nc*nTBins, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(CorrD, TotalCorrD, Nc*nTBins, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 #endif  
         
     MPI_Reduce(BCounts, TotalBCounts, nTBins, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
@@ -382,4 +382,3 @@ void Print_fp()
 
   MPI_Barrier(MPI_COMM_WORLD);
 }
-

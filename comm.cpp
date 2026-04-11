@@ -42,22 +42,22 @@ namespace Communication
 		
 	void requestRightLeftReceive() //z=N+1
 	{
-	  MPI_Irecv(&LocalLattice::Phi[pos(0,0,LocalLattice::N_eta_loc+1)], N_t*N_t*Nc, MPI_DOUBLE, MPI::right, 21, MPI_COMM_WORLD, &RecvRL);		
+	  MPI_Irecv(&LocalLattice::Phi[pos(0,0,LocalLattice::N_eta_loc+1)], N_t*N_t*Nc, MPI_PSEUDO_DOUBLE, MPI::right, 21, MPI_COMM_WORLD, &RecvRL);		
 	}
 	
 	void requestRightLeftSend() //z=1
 	{
-	  MPI_Isend(&LocalLattice::Phi[pos(0,0,1)], N_t*N_t*Nc, MPI_DOUBLE, MPI::left, 21, MPI_COMM_WORLD, &SendRL);		
+	  MPI_Isend(&LocalLattice::Phi[pos(0,0,1)], N_t*N_t*Nc, MPI_PSEUDO_DOUBLE, MPI::left, 21, MPI_COMM_WORLD, &SendRL);		
 	}
 	
 	void requestLeftRightReceive() // z=0
 	{
-	  MPI_Irecv(&LocalLattice::Phi[pos(0,0,0)], N_t*N_t*Nc, MPI_DOUBLE, MPI::left, 12, MPI_COMM_WORLD, &RecvLR);
+	  MPI_Irecv(&LocalLattice::Phi[pos(0,0,0)], N_t*N_t*Nc, MPI_PSEUDO_DOUBLE, MPI::left, 12, MPI_COMM_WORLD, &RecvLR);
 	}
 	
 	void requestLeftRightSend() // z=N
 	{
-	  MPI_Isend(&LocalLattice::Phi[pos(0,0,LocalLattice::N_eta_loc)], N_t*N_t*Nc, MPI_DOUBLE, MPI::right, 12, MPI_COMM_WORLD, &SendLR);
+	  MPI_Isend(&LocalLattice::Phi[pos(0,0,LocalLattice::N_eta_loc)], N_t*N_t*Nc, MPI_PSEUDO_DOUBLE, MPI::right, 12, MPI_COMM_WORLD, &SendLR);
 	}
 	
 	void exchange()
@@ -89,7 +89,7 @@ namespace MSCommunication
 		MPI_Request MSSend;
 		
 		//SEND TO MASTER
-		MPI_Isend(localData,localSize,MPI_DOUBLE,0,99,MPI_COMM_WORLD,&MSSend);
+		MPI_Isend(localData,localSize,MPI_PSEUDO_DOUBLE,0,99,MPI_COMM_WORLD,&MSSend);
 		MPI_Wait(&MSSend,&MSstatus);
 		
 	}
@@ -106,7 +106,7 @@ namespace MSCommunication
 		//DATA FROM OTHER NODES
 		//RECEIVE FROM SLAVES
 		for(int n=1;n<nodes;n++){
-			MPI_Irecv(&globalData[n*localSize],localSize,MPI_DOUBLE,n,99,MPI_COMM_WORLD,&MSRecv[n]);
+			MPI_Irecv(&globalData[n*localSize],localSize,MPI_PSEUDO_DOUBLE,n,99,MPI_COMM_WORLD,&MSRecv[n]);
 		}
 		
 		for(int n=1;n<nodes;n++){

@@ -36,7 +36,7 @@ bool operator < (island& B1, island& B2)
 namespace island_analysis
 {
   pseudo_double thres = 1.125; //the threshold value for island identification
-  long long number_of_islands; //a counter for assigning
+  int number_of_islands; //a counter for assigning
  
   vector< island > found_islands;
 	
@@ -385,14 +385,14 @@ void Analysis_Neighbours()
   //{
     tempur=new pseudo_double[6*addcountr];
     tempdr=new pseudo_double[6*cr];
-    MPI_Irecv(tempdr, 6*cr, MPI_DOUBLE, MPI::right, 3, MPI_COMM_WORLD, &RRRd);
+    MPI_Irecv(tempdr, 6*cr, MPI_PSEUDO_DOUBLE, MPI::right, 3, MPI_COMM_WORLD, &RRRd);
  // } 
 
   //if (addcountl!=0)
  // {
     tempdl=new pseudo_double[6*addcountl];
     tempul=new pseudo_double[6*cl];
-    MPI_Irecv(tempul, 6*cl, MPI_DOUBLE, MPI::left, 6, MPI_COMM_WORLD, &SSSu);
+    MPI_Irecv(tempul, 6*cl, MPI_PSEUDO_DOUBLE, MPI::left, 6, MPI_COMM_WORLD, &SSSu);
  // }
 
       
@@ -443,9 +443,9 @@ void Analysis_Neighbours()
     } 
          
 //  if (addcountr!=0)
-    MPI_Isend(tempur, 6*addcountr, MPI_DOUBLE, MPI::right, 6, MPI_COMM_WORLD, &RRRu);
+    MPI_Isend(tempur, 6*addcountr, MPI_PSEUDO_DOUBLE, MPI::right, 6, MPI_COMM_WORLD, &RRRu);
 //  if (addcountl!=0)
-    MPI_Isend(tempdl, 6*addcountl, MPI_DOUBLE, MPI::left, 3, MPI_COMM_WORLD, &SSSd);
+    MPI_Isend(tempdl, 6*addcountl, MPI_PSEUDO_DOUBLE, MPI::left, 3, MPI_COMM_WORLD, &SSSd);
 
  // if (addcountr!=0)
     MPI_Wait(&RRRd,&bstatus);

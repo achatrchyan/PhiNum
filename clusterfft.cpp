@@ -27,29 +27,29 @@ namespace FFT
   ptrdiff_t locSize;
 	
   pseudo_double *XData;
-  fftw_complex *PData;
+  p_fftw_complex *PData;
 	
-  fftw_plan XtoP,PtoX;
+  p_fftw_plan XtoP,PtoX;
 
   
   
   void init()
   {
-    fftw_mpi_init();
+    p_fftw_mpi_init();
 //Split over z Direction, real in x Direction
-    locSize=fftw_mpi_local_size_3d(N_eta,N_t,N_t/2+1,MPI_COMM_WORLD,&locNz,&xLow);
+    locSize=p_fftw_mpi_local_size_3d(N_eta,N_t,N_t/2+1,MPI_COMM_WORLD,&locNz,&xLow);
 
-    XData=fftw_alloc_real(2*locSize);
-    PData=fftw_alloc_complex(locSize);
+    XData=(pseudo_double*)p_fftw_alloc_real(2*locSize);
+    PData=(p_fftw_complex*)p_fftw_alloc_complex(locSize);
 		
-    XtoP=fftw_mpi_plan_dft_r2c_3d(N_eta,N_t,N_t,XData,PData,MPI_COMM_WORLD,FFTW_MEASURE);
-    PtoX=fftw_mpi_plan_dft_c2r_3d(N_eta,N_t,N_t,PData,XData,MPI_COMM_WORLD,FFTW_MEASURE);
+    XtoP=p_fftw_mpi_plan_dft_r2c_3d(N_eta,N_t,N_t,XData,PData,MPI_COMM_WORLD,FFTW_MEASURE);
+    PtoX=p_fftw_mpi_plan_dft_c2r_3d(N_eta,N_t,N_t,PData,XData,MPI_COMM_WORLD,FFTW_MEASURE);
   }
 
   void fin()
   {
-    fftw_destroy_plan(XtoP);
-    fftw_destroy_plan(PtoX);
+    p_fftw_destroy_plan(XtoP);
+    p_fftw_destroy_plan(PtoX);
   }	
 
   void ensureRealResult(std::complex<pseudo_double> * FieldP)
@@ -101,23 +101,21 @@ namespace FFT
 //If p=-p mode is somewhere else communicate
 	    else
 	    {
-            
-#if (longpseudo_double == 1)            
-          pseudo_double REAL1[2]={real(FieldP[localPy+localPx*(N_t/2+1)+localPz*N_t*(N_t/2+1)]),imag(FieldP[localPy+localPx*(N_t/2+1)+localPz*N_t*(N_t/2+1)])};
+
+#if (doubleprecision == 1 || doubleprecision == -1)
 //Send from left to right
 	      if(ID<partnerID)
 	      {
-            MPI_Isend(&REAL1, 2, MPI_DOUBLE, partnerID, localPy+localPx*(N_t/2+1)+localPz*N_t*(N_t/2+1), MPI_COMM_WORLD, &TransferIV[localPy+localPx*(N_t/2+1)+localPz*N_t*(N_t/2+1)]);
+            MPI_Isend((void*)&FieldP[localPy+localPx*(N_t/2+1)+localPz*N_t*(N_t/2+1)], 2, MPI_PSEUDO_DOUBLE, partnerID, localPy+localPx*(N_t/2+1)+localPz*N_t*(N_t/2+1), MPI_COMM_WORLD, &TransferIV[localPy+localPx*(N_t/2+1)+localPz*N_t*(N_t/2+1)]);
 	      }
 //Receive from left to right (STILL HAS TO BE CONJUGATED)
 	      if(ID>partnerID)
 	      {
-            MPI_Irecv(&REAL1, 2, MPI_DOUBLE, partnerID, localMPy+localMPx*(N_t/2+1)+localMPz*N_t*(N_t/2+1), MPI_COMM_WORLD, &TransferIV[localPy+localPx*(N_t/2+1)+localPz*N_t*(N_t/2+1)]);
-            FieldP[localPy+localPx*(N_t/2+1)+localPz*N_t*(N_t/2+1)]= (REAL1[0], REAL1[1]);
+            MPI_Irecv((void*)&FieldP[localPy+localPx*(N_t/2+1)+localPz*N_t*(N_t/2+1)], 2, MPI_PSEUDO_DOUBLE, partnerID, localMPy+localMPx*(N_t/2+1)+localMPz*N_t*(N_t/2+1), MPI_COMM_WORLD, &TransferIV[localPy+localPx*(N_t/2+1)+localPz*N_t*(N_t/2+1)]);
 	      }
 #endif
 
-#if (longpseudo_double == 0)
+#if (doubleprecision == 0)
 //Send from left to right
 	      if(ID<partnerID)
 	      	MPI_Isend(&FieldP[localPy+localPx*(N_t/2+1)+localPz*N_t*(N_t/2+1)], 1, MPI_DOUBLE_COMPLEX, partnerID, localPy+localPx*(N_t/2+1)+localPz*N_t*(N_t/2+1), MPI_COMM_WORLD, &TransferIV[localPy+localPx*(N_t/2+1)+localPz*N_t*(N_t/2+1)]);
@@ -169,7 +167,7 @@ namespace FFT
     
     
 //Transformation
-    fftw_execute(PtoX);
+    p_fftw_execute(PtoX);
     MPI_Barrier(MPI_COMM_WORLD);
 
     
@@ -210,7 +208,7 @@ namespace FFT
     
     
 //Transformation
-    fftw_execute(XtoP);
+    p_fftw_execute(XtoP);
     MPI_Barrier(MPI_COMM_WORLD);
     
     
@@ -247,7 +245,7 @@ namespace FFT
 	  MPI_Barrier(MPI_COMM_WORLD);
 
 	  //Transformation
-	  fftw_execute(PtoX);
+	  p_fftw_execute(PtoX);
 	  MPI_Barrier(MPI_COMM_WORLD);
 
 	  //Set Output
@@ -292,7 +290,7 @@ namespace FFT
 		
 
 		//Perform Transformation
-		fftw_execute(XtoP);
+		p_fftw_execute(XtoP);
 		
 		MPI_Barrier(MPI_COMM_WORLD);
 

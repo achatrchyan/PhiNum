@@ -25,7 +25,8 @@ class Konfitem
  public:
   Konfitem();
   Konfitem(const char*,const char*);
-  Konfitem(char*,double);
+  Konfitem(char*,double); 
+  Konfitem(char*,float);
   Konfitem(char*,long double);
   Konfitem(char*,int);
   ~Konfitem();
@@ -38,6 +39,7 @@ class Konfitem
   void Setval(const char*);
   void Setval(int);
   void Setval(double);
+  void Setval(float);
   void Setval(long double);
   char* Getval() {return ertek;}
   void print();
@@ -56,6 +58,7 @@ class Konfig
   Konfig();
   Konfig(const char*,const char*);
   Konfig(char*,double);
+  Konfig(char*,float);
   Konfig(char*,long double);
   Konfig(char*,int);
   Konfig(char *);
@@ -67,11 +70,13 @@ class Konfig
   void Set(char*,char*);
   void Set(char*,double);
   void Set(char*,long double);
+  void Set(char*,float);
   void Set(char*,int);
   char * Getval(const char*);
   int Getval(const char * const ,char*) const;
   int Getval(const char * const ,double&) const;
   int Getval(const char * const ,long double&) const;
+  int Getval(const char * const ,float&) const;
   int Getval(const char * const ,int&) const;
   void read_file(char*);
   Konfitem* Getlast();
@@ -87,6 +92,7 @@ class Konfig
  Konfitem* last;
  void Newitem(char*,char*); 
  void Newitem(char*,double);
+ void Newitem(char*,float);
  void Newitem(char*,long double);
  void Newitem(char*,int);
  char tempb[K_BHOSSZ];

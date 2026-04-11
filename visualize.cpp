@@ -104,10 +104,10 @@ void Print3D(int x,int y,int z,int l, int delta)
             }
 	  	  
 #if (theory==0)
-            InteractionHere+=pseudo_double(Lambda_Mode)*(sqr(FieldAmplitudeHere)/(24.0*Nc))+(sqr(FieldAmplitudeHere)*FieldAmplitudeHere/(720.0*Nc*Nc*Kappa*Kappa));
+            InteractionHere+=(pseudo_double)(Lambda_Mode)*(sqr(FieldAmplitudeHere)/(24.0*Nc))+(sqr(FieldAmplitudeHere)*FieldAmplitudeHere/(720.0*Nc*Nc*Kappa*Kappa));
 #endif
 #if (theory==1)
-            InteractionHere+=pseudo_double(Lambda_Mode)*(sqr(FieldAmplitudeHere)/(24.0*Nc));
+            InteractionHere+=(pseudo_double)(Lambda_Mode)*(sqr(FieldAmplitudeHere)/(24.0*Nc));
 #endif
 #if (theory==2)
             InteractionHere+= sqr(LocalLattice::BareM_sqr_long)*(1.-cos( sqrt(FieldAmplitudeHere/LocalLattice::BareM_sqr_long) ));
@@ -116,7 +116,7 @@ void Print3D(int x,int y,int z,int l, int delta)
             InteractionHere+= sqr(LocalLattice::BareM_sqr_long)*(1.-cos( sqrt(FieldAmplitudeHere/LocalLattice::BareM_sqr_long) ));
 #endif
 #if (theory==4)
-	    InteractionHere += pseudo_double ( ((-g*FieldHere*FieldAmplitudeHere)/(6.0)) +  (Lambda_Mode)*(sqr(FieldAmplitudeHere) / (24.0*Nc)) );
+	    InteractionHere += ( ((-g*FieldHere*FieldAmplitudeHere)/(6.0)) +  (pseudo_double) (Lambda_Mode)*(sqr(FieldAmplitudeHere) / (24.0*Nc)) );
 #endif
 	 
             EnergyHere=0.5*MomentumAmplitudeHere + 0.5*GradientHere + InteractionHere;
@@ -253,7 +253,7 @@ void Print2Dz(point P,int x,int y, int l)
         InteractionHere+= sqr(LocalLattice::BareM_sqr_long)*(1.-cos( sqrt(FieldAmplitudeHere/LocalLattice::BareM_sqr_long) ));
 #endif
 #if (theory==4)
-		InteractionHere += pseudo_double(((-g*FieldHere*FieldAmplitudeHere) / (6.0)) + (Lambda_Mode)*(sqr(FieldAmplitudeHere) / (24.0*Nc)));
+		InteractionHere += (((-g*FieldHere*FieldAmplitudeHere) / (6.0)) + (pseudo_double)(Lambda_Mode)*(sqr(FieldAmplitudeHere) / (24.0*Nc)));
 #endif
 	 
         EnergyHere=0.5*MomentumAmplitudeHere + 0.5*GradientHere + InteractionHere;
