@@ -24,7 +24,7 @@ void Print3D(int x,int y,int z,int l, int delta)
   
   std::ofstream fout;
   char *fname=new char[256];
-  snprintf(fname,256,"./%i/3d-%i-%i-%i-%i-%i.txt",LASTRUN,int(LocalLattice::tau),x,y,z,l);
+  snprintf(fname,256,"./output/%i/3d-%i-%i-%i-%i-%i.txt",LASTRUN,int(LocalLattice::tau),x,y,z,l);
       
   int rID=z/LocalLattice::N_eta_loc;
     
@@ -170,7 +170,7 @@ void Print2Dz(point P,int x,int y, int l)
   
     std::ofstream fout;
     char *fname=new char[256];
-    snprintf(fname,256,"./%i/2dz-%i.txt",LASTRUN,jJj++);
+    snprintf(fname,256,"./output/%i/2dz-%i.txt",LASTRUN,jJj++);
     fout.open(fname);
     delete[] fname;
     
@@ -320,8 +320,8 @@ void Print2Dx3(point P,int x,int y,int z,int l)
   
   std::ofstream fxout,fyout;
   char *fnamex=new char[256], *fnamey=new char[256];
-  snprintf(fnamex,256,"./%i/2dx-%i-%i-%i-%i-%i.txt",LASTRUN,int(LocalLattice::tau),P.x(),y,z,l);
-  snprintf(fnamey,256,"./%i/2dy-%i-%i-%i-%i-%i.txt",LASTRUN,int(LocalLattice::tau),x,P.y(),z,l);
+  snprintf(fnamex,256,"./output/%i/2dx-%i-%i-%i-%i-%i.txt",LASTRUN,int(LocalLattice::tau),P.x(),y,z,l);
+  snprintf(fnamey,256,"./output/%i/2dy-%i-%i-%i-%i-%i.txt",LASTRUN,int(LocalLattice::tau),x,P.y(),z,l);
       
   int rID=z/LocalLattice::N_eta_loc;
     
@@ -449,7 +449,7 @@ void Print_snapshot_of_islands()
   using namespace island_analysis;
     
   char * fname = new char[256];
-  snprintf(fname, 256, "./%i/islands-%i.txt", LASTRUN, jJj++);
+  snprintf(fname, 256, "./output/%i/islands-%i.txt", LASTRUN, jJj++);
 
   for (int j=0;j<nodes;j++)
   {

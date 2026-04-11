@@ -308,7 +308,7 @@ void Print_fp()
   {
     std::ofstream specOut;
     char *fname=new char[256];
-    snprintf(fname,256,"./%i/Distrib-%i-%g.txt",LASTRUN,  runID, really_double(numeric::LastMOoutput));
+    snprintf(fname,256,"./output/%i/Distrib-%i-%g.txt",LASTRUN,  runID, really_double(numeric::LastMOoutput));
     specOut.open(fname);
     delete[] fname;
       

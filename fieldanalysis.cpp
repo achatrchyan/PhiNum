@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream> 
 #include <iomanip>
+#include <sys/stat.h>
 #include <mpi.h>
 
 #include "parameters.cpp"
@@ -55,9 +56,19 @@ void Prepare_Output()
     fout<<++LASTRUN<<endl;
     fout.close();
     
+    char* folder = new char[256];
+    snprintf(folder, 256, "./output/%i", LASTRUN);
+
+    // Check if the directory already exists
+    struct stat info;
+    if (stat(folder, &info) == 0 && S_ISDIR(info.st_mode)) {
+        std::cout << "Warning: Output folder " << folder << " already exists! Files will be overwritten." << std::endl;
+    }
+
     char* cmd=new char[256];
-    snprintf(cmd,256,"mkdir ./%i",LASTRUN);
+    snprintf(cmd, 256, "mkdir -p %s", folder);
     system(cmd);
+    delete[] folder;
     delete[] cmd;
     
  //   std::cerr << "Created a folder "<< LASTRUN<<std::endl; 
@@ -151,9 +162,9 @@ void Print_Info_File()
   if (ID==0)
   {
     std::ofstream out;
-	
+
     char *fname=new char[256];
-    snprintf(fname,256,"./%i/info.txt",LASTRUN);
+    snprintf(fname,256,"./output/%i/info.txt",LASTRUN);    
     out.open(fname);
     delete[] fname;
   
@@ -696,7 +707,7 @@ void Print_Extrema()
     if (ID==0)
     {
       char *fname=new char[256];
-      snprintf(fname,256,"./%i/SO-%i.txt",LASTRUN, runID);
+      snprintf(fname,256,"./output/%i/SO-%i.txt",LASTRUN, runID);
       SpatialObs.open(fname, fstream::app);
       delete[] fname;    
     }
@@ -745,7 +756,7 @@ void Print_AveragesExtrema()
       if (runID>1)
         SpatialObs.close();
       char *fname=new char[256];
-      snprintf(fname,256,"./%i/SO-%i.txt",LASTRUN, runID);
+      snprintf(fname,256,"./output/%i/SO-%i.txt",LASTRUN, runID);
       SpatialObs.open(fname, fstream::app);
       delete[] fname;    
     }
@@ -796,7 +807,7 @@ void Print_Averages()
     if (ID==0)
     {
       char *fname=new char[256];
-      snprintf(fname,256,"./%i/SO-%i.txt",LASTRUN, runID);
+      snprintf(fname,256,"./output/%i/SO-%i.txt",LASTRUN, runID);
       SpatialObs.open(fname, fstream::app);
       delete[] fname;    
     }
@@ -857,7 +868,7 @@ void field_statistics()
 
 	ofstream fout;
 	char *fname=new char[256];
-	snprintf(fname,256,"./%i/field_statistics.txt",LASTRUN);
+	snprintf(fname,256,"./output/%i/field_statistics.txt",LASTRUN);
 	fout.open(fname, std::fstream::app);
 	delete[] fname;
 	

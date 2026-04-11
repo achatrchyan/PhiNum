@@ -2,7 +2,7 @@
 #define _FFT_
 
 #include <mpi.h>
-#include </home/achatrch/FFTW/include/fftw3-mpi.h>
+#include <fftw3-mpi.h>
 #include <complex>
 
 #include "parameters.cpp"

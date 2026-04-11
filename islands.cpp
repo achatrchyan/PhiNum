@@ -655,8 +655,8 @@ void Old_islands()
   
   char * fname=new char[256];
   char * fname2=new char[256];
-  snprintf(fname,256,"./%i/non_critical_islands.txt",LASTRUN);
-  snprintf(fname2,256, "./%i/islands.txt", LASTRUN);
+  snprintf(fname,256,"./output/%i/non_critical_islands.txt",LASTRUN);
+  snprintf(fname2,256, "./output/%i/islands.txt", LASTRUN);
   
   for (int rID=0;rID<nodes;rID++)
   {
@@ -716,8 +716,8 @@ void print_bubble_history(int i)
 
 	char * fname = new char[256];
   char * fname2 = new char[256];
-  snprintf(fname, 256, "./%i/expanding_bubbles.txt", LASTRUN);
-  snprintf(fname2, 256, "./%i/islands.txt", LASTRUN);
+  snprintf(fname, 256, "./output/%i/expanding_bubbles.txt", LASTRUN);
+  snprintf(fname2, 256, "./output/%i/islands.txt", LASTRUN);
 	Expanding_bubbles.open(fname, std::ifstream::app);
   Init_islands.open(fname2, std::ifstream::app);
 
@@ -762,7 +762,7 @@ void Oscillon_specific_observables()//must be generalized
     
   ofstream osc_out;
   char * fname = new char[256];
-  snprintf(fname, 256, "./%i/oscillons.txt", LASTRUN);
+  snprintf(fname, 256, "./output/%i/oscillons.txt", LASTRUN);
   osc_out.open(fname, std::ifstream::app);
   
   osc_out<<LocalLattice::tau<< ' '<<r_osc<<' '<<n_osc<<' '<<avgM_osc<<endl;

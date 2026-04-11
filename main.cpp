@@ -46,7 +46,7 @@ int main(int argc, char **argv)
   MomentumSpace::init();
   MPI_Barrier(MPI_COMM_WORLD);  
 
-  stat::init();
+  Statistic::init();
   MPI_Barrier(MPI_COMM_WORLD);  
   
   for (runID=1; runID<=runs; runID++)

@@ -9,7 +9,7 @@
 #include "lattice.cpp"
 #include "islands.cpp"
 
-namespace stat
+namespace Statistic
 {
     pseudo_double T_decay;
     pseudo_double *T_decays;
@@ -38,7 +38,7 @@ namespace stat
     }
 }
 
-using namespace stat;
+using namespace Statistic;
 
 void add_stat_new()
 {
@@ -76,14 +76,14 @@ void output_stat()
 	{
     	std::ofstream fout;
     	char *fname=new char[256];
-    	snprintf(fname,256,"./%i/islands_stat_2d.txt",LASTRUN);
+    	snprintf(fname,256,"./output/%i/islands_stat_2d.txt",LASTRUN);
     	fout.open(fname);
     	for (int i=0;i<nnnnn;i++)
         	for (int j=0;j<nnnnn;j++)
             	fout<<i*(5.*thres/nnnnn)<<' '<<j*(5./QS/nnnnn)<<' '<<totislands_phi0_r[i][j]/( 5.*thres/(pseudo_double)(nnnnn) )/ (5./QS/nnnnn) /(long double)(runs)/(long double)(N_t)/(long double)(N_t)/(long double)(N_t)/a_t/a_t/a_t<<' '<<totislands_phi0_r0[i][j]/(5.*thres/(pseudo_double)(nnnnn) )/(5./QS/nnnnn)/(long double)(runs)/(long double)(N_t)/(long double)(N_t)/(long double)(N_t)/a_t/a_t/a_t<<endl;
     	fout.close();
 
-    	snprintf(fname,256,"./%i/islands_stat_1d.txt",LASTRUN);
+    	snprintf(fname,256,"./output/%i/islands_stat_1d.txt",LASTRUN);
     	fout.open(fname);
     	for (int i=0;i<nnnnn;i++)
     	{
@@ -120,7 +120,7 @@ void output_stat_time()
     {
         std::ofstream fout;
     	char *fname=new char[256];
-    	snprintf(fname,256,"./%i/decay_times.txt",LASTRUN);
+    	snprintf(fname,256,"./output/%i/decay_times.txt",LASTRUN);
     	fout.open(fname);
     	for (int i=0;i<runs;i++)
         	fout<<T_decays[i]<<' '<<runs - i<<endl;
@@ -128,7 +128,7 @@ void output_stat_time()
         delete [] fname;
 
     	fname=new char[256];
-    	snprintf(fname,256,"./%i/mean_decay_time.txt",LASTRUN);
+    	snprintf(fname,256,"./output/%i/mean_decay_time.txt",LASTRUN);
     	fout.open(fname);
     	fout<<T_decay/runs<<endl;
     	fout.close();

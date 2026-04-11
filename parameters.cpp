@@ -7,7 +7,7 @@
 /*=======Parameters=========*/
 
 //Simulation parameters
-int runs=50;
+int runs=2;
 int runID;
 
 #define longdouble 0
@@ -57,7 +57,7 @@ int ID;			// the ID of the CPU
 
 #if (theory==0) //N-component phi4phi6 theory
 
-int Nc=4;					// number of scalar field components
+int Nc=1;					// number of scalar field components
 
 //mass
 int Mass_Mode=1;			// 1 - positive, -1 - negative, 0 - 0 mass
