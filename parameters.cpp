@@ -298,13 +298,13 @@ pseudo_double pi0=0.;		// the derivative of initial background field rescaled by
 
 int justnoise=0;	// 0 usual initialization for f(t=0,p) as above, 1 for just the noise until scale2 (Amplitude==0) -> simply leave justnoise=0
 
-pseudo_double QS=3.;   	// initial momentum scale - NOTE: has to be specified!!!
+pseudo_double QS=1.;   	// initial momentum scale - NOTE: has to be specified!!!
 pseudo_double scale2=0.;	// second scale for vacuum fluctuations (proper renormalization)
 // NOTE: if scale2 == 0, then scale2 is the momentum cutoff and the vacuum is occupied up to the cutoff
 
 pseudo_double Amplitude=0.;	// amplitude parameter
 #if (relicpockets==1)
-pseudo_double Amplitude2=1.;	// amplitude parameter
+pseudo_double Amplitude2=70.;	// amplitude parameter
 #endif
 pseudo_double chi=1.;		// anisotropy parameter
 pseudo_double Noise=0.0;	// vacuum amplitude,  NOTE: measured NOT in orders of 1/lambda but in O(1)!

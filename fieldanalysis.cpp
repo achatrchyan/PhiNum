@@ -415,6 +415,7 @@ void CalculateVolumeAverages()
   Charge=0.;
 
   pseudo_double GradPhiSqr=0.0;
+  pseudo_double GradChiSqr = 0., ChiSqr = 0.;
 
   int Kooo=pos(0,0,1);
   
@@ -435,28 +436,20 @@ void CalculateVolumeAverages()
 	      for(int a=0;a<Nc;a++)
 	      {
 	        phi[a]+=Phi[Kooo];	pi[a]+=Pi[Kooo];
-	  
-	        phi2+=sqr(Phi[Kooo]);	pi2+=sqr(Pi[Kooo]);
-#if (relicpockets == 0)
+
           phi2+=sqr(Phi[Kooo]);	pi2+=sqr(Pi[Kooo]);
-#endif
-#if (relicpockets == 1)
-          if (a>=0)
-          {
-            phi2+=sqr(Phi[Kooo]);	
-          
-            pi2+=sqr(Pi[Kooo]);
-          }
-#endif
 	        phipi+=Phi[Kooo]*Pi[Kooo];
 	  
 	        locPhiSqr+=sqr(Phi[Kooo]);	//it is calculated separately for phi^4 and phi^6
           locPhi+=Phi[Kooo];
-	  
-#if (relicpockets==1)
-	        if (a>=0)
-#endif
-            GradPhiSqr+= ( sqr( Phi[Kuoo]-Phi[Kooo] )/sqr(a_t) + sqr( Phi[Kouo]-Phi[Kooo] )/sqr(a_t) + sqr( Phi[Koou]-Phi[Kooo] )/sqr(a_t) );
+#if (relicpockets ==1)
+          if (a==1 &&  tanh((Phi[Kooo-1]-phimax)/Deltaphi)<0)  //this is the condition to be inside the pockets
+          {
+            GradChiSqr +=  ( sqr( Phi[Kuoo]-Phi[Kooo] )/sqr(a_t) + sqr( Phi[Kouo]-Phi[Kooo] )/sqr(a_t) + sqr( Phi[Koou]-Phi[Kooo] )/sqr(a_t) );
+            ChiSqr += sqr(Phi[Kooo]);
+          }
+#endif          
+          GradPhiSqr+= ( sqr( Phi[Kuoo]-Phi[Kooo] )/sqr(a_t) + sqr( Phi[Kouo]-Phi[Kooo] )/sqr(a_t) + sqr( Phi[Koou]-Phi[Kooo] )/sqr(a_t) );
 #if (withEnergyPS==1)
           Delta[Kooo] = (0.5*sqr(Pi[Kooo]) +  0.5*sqr( Phi[Kuoo]-Phi[Kooo] )/sqr(a_t) + 0.5*sqr( Phi[Kouo]-Phi[Kooo] )/sqr(a_t) + 0.5*sqr( Phi[Koou]-Phi[Kooo] )/sqr(a_t) );
 #if (expansion==1)
@@ -517,7 +510,7 @@ void CalculateVolumeAverages()
 #endif
 #if (relicpockets ==1)
 	        if (a==0)
-            Interaction+=0.5*BareM_sqr_long*Phi[Kooo]*Phi[Kooo] - g*Phi[Kooo]*Phi[Kooo]*Phi[Kooo]/6. + Phi[Kooo]*Phi[Kooo]*Phi[Kooo]*Phi[Kooo]/24. + 0.5 * M_axion_sqr * 0.5*(1+tanh((Phi[Kooo]-phimax)/Deltaphi))*Phi[Kooo+1]*Phi[Kooo+1];
+	          Interaction+=0.5*BareM_sqr_long*Phi[Kooo]*Phi[Kooo] - g*Phi[Kooo]*Phi[Kooo]*Phi[Kooo]/6. + Phi[Kooo]*Phi[Kooo]*Phi[Kooo]*Phi[Kooo]/24. + 0.5 * M_axion_sqr * 0.5*(1+tanh((Phi[Kooo]-phimax)/Deltaphi))*Phi[Kooo+1]*Phi[Kooo+1];
 	    //      Interaction+=0.5*BareM_sqr_long*Phi[Kooo]*Phi[Kooo] - g*Phi[Kooo]*Phi[Kooo]*Phi[Kooo]/6. + Phi[Kooo]*Phi[Kooo]*Phi[Kooo]*Phi[Kooo]/24. + exp(a_xi*(Phi[Kooo]-2.))*Phi[Kooo+1]*Phi[Kooo+1];
 	        else
 	          Interaction+=0;	  
@@ -648,9 +641,12 @@ void CalculateVolumeAverages()
 
   Charge = (0.5*pi2 - GradPhiSqr/6. - Interaction);
 #if (relicpockets==1)
-  Charge = (0.5*pi2 + 0.5*GradPhiSqr); //I compute the energy of the axion, but right now it is wrong
+  Charge = GradChiSqr;
 #endif
   Energy = (0.5*pi2 + 0.5*GradPhiSqr + Interaction);
+#if (relicpockets ==1)
+  Interaction = ChiSqr;
+#endif  
 #if (expansion==1)
   Energy +=(0.5*phi2*sqr(H_0/scale_factor) - phipi*H_0/scale_factor );
   Charge +=(0.5*phi2*sqr(H_0/scale_factor) - phipi*H_0/scale_factor );
@@ -808,6 +804,9 @@ void Print_AveragesExtrema()
     }  
   CalculateExtrema();
   CalculateVolumeAverages();
+  
+ // if (numeric::total_stepcount%(int(sqrt(1./dtau)))!=0)
+	//  return ;
   
   if (ID==0)
   {

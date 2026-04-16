@@ -137,10 +137,12 @@ void updateMomenta()
 #endif
 #if (theory==4)
 #if (expansion==0)
+#if (relicpockets == 0)
 	        if (a == 0)
 		        Pi[Kooo] += (LapPhi - ( Mass_Mode * BareM_sqr_long - g* Phi[Kooo] / 2. + Lambda_Mode * (locPhiSqr / (6.*Nc))) * Phi[Kooo] )    *   (tau - Last_Momenta_update);
 	        else
 		        Pi[Kooo] += (LapPhi - ( Mass_Mode * BareM_sqr_trans - g* Phi[Kooo] / 2. + Lambda_Mode * (locPhiSqr / (6.*Nc))) * Phi[Kooo] )   *   (tau - Last_Momenta_update);
+#endif
 #if (relicpockets == 1)
           if (a == 0)
 		        Pi[Kooo] += (LapPhi - ( BareM_sqr_long - g* Phi[Kooo] / 2. + (Phi[Kooo]*Phi[Kooo] / 6.) ) * Phi[Kooo] - 0.25*M_axion_sqr/Deltaphi/cosh((Phi[Kooo]-phimax)/Deltaphi)/cosh((Phi[Kooo]-phimax)/Deltaphi)*Phi[Kooo + 1]*Phi[Kooo+1] )    *   (tau - Last_Momenta_update);
