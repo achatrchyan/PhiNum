@@ -7,7 +7,7 @@
 /*=======Parameters=========*/
 
 //Simulation parameters
-int runs=10.;
+int runs=1;
 int runID;
 
 #define doubleprecision 0
@@ -75,13 +75,14 @@ int runID;
 #define withEnergyPS 0
 #define islanddetect 0
 #define EnergybasedID 0 //to tag the islands based on their energy density or not (relevant only if withEnergyPS==1)
+#define relicpockets 1
 
 // MPI
 int nodes;		// all CPUs used
 int ID;			// the ID of the CPU
 
 // Theory parameters -------------------------------------------------------------
-#define theory 0
+#define theory 4
 
 #if (theory==0) //N-component phi4phi6 theory
 
@@ -145,16 +146,25 @@ pseudo_double Lambda = (M_sqr / (F_SSB*F_SSB)); //quartic coupling
 
 #if (theory==4) //second minimum
 
-int Nc = 1;				// number of scalar field components
+int Nc = 2;				// number of scalar field components
 
 int Mass_Mode = 1;			// 1 - positive, -1 - negative, 0 - 0 mass
 pseudo_double M_sqr = 1.;		// value of renormalized mass
 					//quartic interaction
 int Lambda_Mode = 1;			// 1 - positive, -1 - negative, 0 - 0 coupling
-pseudo_double Lambda = 1e-6;		// value of Lambda
+pseudo_double Lambda = 1;		// value of Lambda
 
 					//cubic interaction
 pseudo_double g = 2.;
+
+#if (relicpockets == 1)
+pseudo_double a_xi = 0.5;
+pseudo_double phimax = 2.7;
+pseudo_double Deltaphi = 0.2;
+pseudo_double M_axion_sqr = 1000.;
+#endif
+
+
 #endif
 
 #if (theory==5) //Monodromy potential
@@ -181,17 +191,17 @@ pseudo_double H_I=F_SSB*1e-5; //Hubble scale of inlfation
 // Specifying Lattice --------------------------------------------------------------
 
 //Spatial Lattice parameters
-pseudo_double a_t=0.5;
-int N_t=64;
+int N_t = 256;
+pseudo_double a_t=0.1;		// spatial lattice spacing in the transverse direction
 
 pseudo_double a_eta;
 int N_eta; 		
 
 //Time parameters
 pseudo_double T0=0;				// initial time
-pseudo_double TMax=100000;			// the maximal time of the simulation after that the simulation ends
-pseudo_double TSO=0.1;			// the time difference between output for energy, pressure, etc. (T.out) and the background field (Phi.out), i.e. of all observables computed in direct space. 
-pseudo_double TMO=50.;			// the time difference between the output of the distribution function, the correlations and possibly other observables generated in Fourier space. 
+pseudo_double TMax=1000;			// the maximal time of the simulation after that the simulation ends
+pseudo_double TSO=1;			// the time difference between output for energy, pressure, etc. (T.out) and the background field (Phi.out), i.e. of all observables computed in direct space. 
+pseudo_double TMO=10;			// the time difference between the output of the distribution function, the correlations and possibly other observables generated in Fourier space. 
 pseudo_double dtBaseTrans=0.1;		// usual time base (see lattice.cpp), dtau = dtBaseTrans*a_t
 pseudo_double dtBaseLong=0.1;			// time base for the first part of dynamics (see lattice.cpp) when an adaptive time step is used (i.e. when adjustDT == 1), then one has dtau = dtBaseLong*tau*a_eta (see lattice.cpp)
 //NOTE: The time variable used in the code is called tau. Its time step dtau is computed by specified ratios dtBase... that we will call time bases, see below.
@@ -288,16 +298,18 @@ pseudo_double pi0=0.;		// the derivative of initial background field rescaled by
 
 int justnoise=0;	// 0 usual initialization for f(t=0,p) as above, 1 for just the noise until scale2 (Amplitude==0) -> simply leave justnoise=0
 
-pseudo_double QS=1.;   	// initial momentum scale - NOTE: has to be specified!!!
-pseudo_double scale2=1.;	// second scale for vacuum fluctuations (proper renormalization)
+pseudo_double QS=3.;   	// initial momentum scale - NOTE: has to be specified!!!
+pseudo_double scale2=0.;	// second scale for vacuum fluctuations (proper renormalization)
 // NOTE: if scale2 == 0, then scale2 is the momentum cutoff and the vacuum is occupied up to the cutoff
 
 pseudo_double Amplitude=0.;	// amplitude parameter
+#if (relicpockets==1)
+pseudo_double Amplitude2=1.;	// amplitude parameter
+#endif
 pseudo_double chi=1.;		// anisotropy parameter
-pseudo_double Noise=0.5;	// vacuum amplitude,  NOTE: measured NOT in orders of 1/lambda but in O(1)!
-pseudo_double phi0_0=0., phi0_1=0.; 	// the initial background field rescaled by sqrt(Lambda)
+pseudo_double Noise=0.0;	// vacuum amplitude,  NOTE: measured NOT in orders of 1/lambda but in O(1)!
+pseudo_double phi0_0=0, phi0_1=0.; 	// the initial background field rescaled by sqrt(Lambda), 0.88 = 3.6*sqrt(0.06)
 pseudo_double pi0_0=0., pi0_1=0.;	// the derivative of initial background field rescaled by sqrt(Lambda)
-
 pseudo_double M2_long=0., M2_trans=0.; 	//effective mass at initial time, to be calculated
 
 #endif

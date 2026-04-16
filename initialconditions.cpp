@@ -9,37 +9,9 @@
 #include "lattice.cpp"
 #include "clusterfft.cpp"
 
-namespace randGen
-{
-	void init()
-	{
-		srand48(time(NULL)*(ID+1));
-	}
-	
-	pseudo_double rng()
-	{
-		return drand48();
-	}
-	
-	int on=0;
-	pseudo_double gauss1,gauss2;
-	
-	pseudo_double Gauss()
-	{
-		if(on==1){on=0; return gauss2;}
-		pseudo_double x,y,r,c,s;
-		int accept=0;
-		while(accept==0){
-			x=2.0*rng()-1.0; y=2.0*rng()-1.0;
-			r=sqrt(sqr(x)+sqr(y));
-			if(r<1.0){accept=1;}
-		}
-		c=x/r; s=y/r;
-		gauss1=c*sqrt(-2.0*log(sqr(r)));
-		gauss2=(s/c)*gauss1;
-		on=1; return gauss1;
-	}
-}
+#include "seedbubbles.cpp"
+
+
 
 ////// INITIALIZE MODES IN MOMENTUM SPACE ////////
 void SetInitialConditions()
@@ -465,7 +437,13 @@ void SetInitialConditions()
 #endif
 #if (expansion==0)
 						if(pchisqr<QS*QS)
+						{
 		   					Occupation=Amplitude+Noise;
+#if (relicpockets==1)
+							if (a==1)
+								Occupation= Amplitude2 + Noise; 
+#endif
+						}
 #endif
 							//Chopped Plateau
 						else
@@ -489,8 +467,8 @@ void SetInitialConditions()
 						{
 							if(sqrt(pchisqr)<scale2)
 								Occupation=Noise;
-							else 
-								Occupation=0.0;
+						else
+							Occupation=0.0;
 						}
 					}
 
@@ -696,6 +674,40 @@ void SetInitialConditions()
 			}
 		}
 	}
+	MPI_Barrier(MPI_COMM_WORLD);
+
+
+
+    if (ID==0) std::cout << "Add some bubbles!\n";
+
+
+	// >>> LOAD BOUNCE PROFILE HERE <<<
+	BounceProfile bp = load_bounce_profile("bounce.txt");
+
+	double phi_mid = 0.5 * (bp.phi[0] + bp.phi[bp.N - 1]);
+	double wall_r = 0.0;
+	for (int j = 0; j < bp.N; j++)
+	   	if (bp.phi[j] < phi_mid)
+    	{
+        	wall_r = bp.r[j];
+        	break;
+    	}
+	
+	int N_bubbles = 5;                 // your choice
+	double L = N_t * a_t;
+	double d_min = 3.*wall_r;
+
+	Point *points = new Point[N_bubbles];
+
+	generate_and_broadcast_points(points, N_bubbles, L, d_min, ID, MPI_COMM_WORLD);
+
+	if (ID==0)
+		cout << "Initializing bubbles...\n";
+
+	initialize_bubbles(points, N_bubbles, &bp);
+	MPI_Barrier(MPI_COMM_WORLD);
+	delete[] points;
+	free_bounce_profile(&bp);
 	MPI_Barrier(MPI_COMM_WORLD);
 		
 	//Exchange boundaries

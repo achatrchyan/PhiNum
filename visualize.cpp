@@ -189,7 +189,13 @@ void Print2Dz(point P,int x,int y, int l)
             ChargeHere+=LocalLattice::Phi[Position]*LocalLattice::Pi[Position+1]-LocalLattice::Phi[Position+1]*LocalLattice::Pi[Position];
 #endif  
         FieldHere=LocalLattice::Phi[Position];	//The first component
+#if (relicpockets ==0)
         MomentumHere=LocalLattice::Pi[Position];
+#endif
+#if (relicpockets ==1)
+        MomentumHere=LocalLattice::Phi[Position+1]; // I changed this part of the code!
+#endif
+        
 	  
 #if (withEnergyPS==1)	
         EnergyHere = LocalLattice::Delta[Position];  
@@ -197,11 +203,22 @@ void Print2Dz(point P,int x,int y, int l)
 #if (withEnergyPS==0) //remove?
         for (int a=0;a<Nc;a++)
         {
+#if (relicpockets ==0)
             FieldAmplitudeHere+=(LocalLattice::Phi[Position]*LocalLattice::Phi[Position]);
             MomentumAmplitudeHere+=(LocalLattice::Pi[Position]*LocalLattice::Pi[Position]);
 	    
             GradientHere+= ( sqr( LocalLattice::Phi[Kuoo]-LocalLattice::Phi[Position] )/sqr(a_t) + sqr( LocalLattice::Phi[Kouo]-LocalLattice::Phi[Position] )/sqr(a_t) + sqr( LocalLattice::Phi[Koou]-LocalLattice::Phi[Position] )/sqr(a_t) );
 
+#endif
+#if (relicpockets ==1)
+          if (a==1)
+          {
+            FieldAmplitudeHere=(LocalLattice::Phi[Position]*LocalLattice::Phi[Position]);
+            MomentumAmplitudeHere=(LocalLattice::Pi[Position]*LocalLattice::Pi[Position]);
+	          InteractionHere = M_axion_sqr * 0.5*(1+tanh((LocalLattice::Phi[Position -1]-phimax)/Deltaphi));
+            GradientHere= ( sqr( LocalLattice::Phi[Kuoo]-LocalLattice::Phi[Position] )/sqr(a_t) + sqr( LocalLattice::Phi[Kouo]-LocalLattice::Phi[Position] )/sqr(a_t)  + sqr( LocalLattice::Phi[Koou]-LocalLattice::Phi[Position] )/sqr(a_t) );
+          }
+#endif
 #if (theory==0)
             if (a==0)
                 InteractionHere+=(pseudo_double)(Mass_Mode)*0.5*LocalLattice::BareM_sqr_long*sqr(LocalLattice::Phi[Position]) ;
@@ -253,10 +270,15 @@ void Print2Dz(point P,int x,int y, int l)
         InteractionHere+= sqr(LocalLattice::BareM_sqr_long)*(1.-cos( sqrt(FieldAmplitudeHere/LocalLattice::BareM_sqr_long) ));
 #endif
 #if (theory==4)
+#if (relicpockets ==0)
 		InteractionHere += (((-g*FieldHere*FieldAmplitudeHere) / (6.0)) + (pseudo_double)(Lambda_Mode)*(sqr(FieldAmplitudeHere) / (24.0*Nc)));
+#endif
 #endif
 	 
         EnergyHere=0.5*MomentumAmplitudeHere + 0.5*GradientHere + InteractionHere;
+#if (relicpockets ==1)
+        EnergyHere= 0.5*MomentumAmplitudeHere + 0.5*FieldAmplitudeHere*InteractionHere + 0.5*GradientHere;
+#endif
         FieldAmplitudeHere=sqrt(FieldAmplitudeHere);
         MomentumAmplitudeHere=sqrt(MomentumAmplitudeHere);
 #endif
@@ -269,9 +291,8 @@ void Print2Dz(point P,int x,int y, int l)
         fout<<LocalLattice::scale_factor<<' ';
 #endif
         fout<<FieldHere<<' '<<MomentumHere;
-#if (withEnergyPS==1)
         fout<<' '<<EnergyHere;
-#endif
+
         
 #if (withcharge==1)
         if (Nc==2)

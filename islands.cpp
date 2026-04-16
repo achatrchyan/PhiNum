@@ -28,7 +28,7 @@ struct island
 };
 
 //compare them according to their volume?
-bool operator < (island& B1, island& B2)
+bool operator < (const island& B1, const island& B2)
 {
   return (B1.V.back()>B2.V.back());
 }

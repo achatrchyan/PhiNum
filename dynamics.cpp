@@ -4,6 +4,7 @@
 #include "lattice.cpp"
 #include "comm.cpp"
 #include "parameters.cpp"
+#include "fieldanalysis.cpp"
 
 namespace numeric
 {
@@ -140,6 +141,14 @@ void updateMomenta()
 		        Pi[Kooo] += (LapPhi - ( Mass_Mode * BareM_sqr_long - g* Phi[Kooo] / 2. + Lambda_Mode * (locPhiSqr / (6.*Nc))) * Phi[Kooo] )    *   (tau - Last_Momenta_update);
 	        else
 		        Pi[Kooo] += (LapPhi - ( Mass_Mode * BareM_sqr_trans - g* Phi[Kooo] / 2. + Lambda_Mode * (locPhiSqr / (6.*Nc))) * Phi[Kooo] )   *   (tau - Last_Momenta_update);
+#if (relicpockets == 1)
+          if (a == 0)
+		        Pi[Kooo] += (LapPhi - ( BareM_sqr_long - g* Phi[Kooo] / 2. + (Phi[Kooo]*Phi[Kooo] / 6.) ) * Phi[Kooo] - 0.25*M_axion_sqr/Deltaphi/cosh((Phi[Kooo]-phimax)/Deltaphi)/cosh((Phi[Kooo]-phimax)/Deltaphi)*Phi[Kooo + 1]*Phi[Kooo+1] )    *   (tau - Last_Momenta_update);
+//		        Pi[Kooo] += (LapPhi - ( BareM_sqr_long - g* Phi[Kooo] / 2. + (Phi[Kooo]*Phi[Kooo] / 6.) ) * Phi[Kooo] - exp(a_xi*(Phi[Kooo]-2.))*a_xi*Phi[Kooo + 1]*Phi[Kooo+1] )    *   (tau - Last_Momenta_update);
+	        else
+		        Pi[Kooo] += (LapPhi - M_axion_sqr * 0.5*(1+tanh((Phi[Kooo-1]-phimax)/Deltaphi)) * Phi[Kooo] )   *   (tau - Last_Momenta_update);
+//		        Pi[Kooo] += (LapPhi - (2. * exp(a_xi*(Phi[Kooo-1]-2.))) * Phi[Kooo] )   *   (tau - Last_Momenta_update);
+#endif 
 #endif
 #if (expansion==1)
 	        if (a == 0)
@@ -196,7 +205,7 @@ void updateFields()
 void evolve()
 {
   using namespace LocalLattice;
-  
+   
   if (regime==0)
   {
     tau+=0.5*dtau;

@@ -162,7 +162,7 @@ void Print_Info_File()
   if (ID==0)
   {
     std::ofstream out;
-
+	
     char *fname=new char[256];
     snprintf(fname,256,"./output/%i/info.txt",LASTRUN);    
     out.open(fname);
@@ -437,14 +437,28 @@ void CalculateVolumeAverages()
 	        phi[a]+=Phi[Kooo];	pi[a]+=Pi[Kooo];
 	  
 	        phi2+=sqr(Phi[Kooo]);	pi2+=sqr(Pi[Kooo]);
+#if (relicpockets == 0)
+          phi2+=sqr(Phi[Kooo]);	pi2+=sqr(Pi[Kooo]);
+#endif
+#if (relicpockets == 1)
+          if (a>=0)
+          {
+            phi2+=sqr(Phi[Kooo]);	
+          
+            pi2+=sqr(Pi[Kooo]);
+          }
+#endif
 	        phipi+=Phi[Kooo]*Pi[Kooo];
 	  
 	        locPhiSqr+=sqr(Phi[Kooo]);	//it is calculated separately for phi^4 and phi^6
           locPhi+=Phi[Kooo];
 	  
-	        GradPhiSqr+= ( sqr( Phi[Kuoo]-Phi[Kooo] )/sqr(a_t) + sqr( Phi[Kouo]-Phi[Kooo] )/sqr(a_t) + sqr( Phi[Koou]-Phi[Kooo] )/sqr(a_t) );
+#if (relicpockets==1)
+	        if (a>=0)
+#endif
+            GradPhiSqr+= ( sqr( Phi[Kuoo]-Phi[Kooo] )/sqr(a_t) + sqr( Phi[Kouo]-Phi[Kooo] )/sqr(a_t) + sqr( Phi[Koou]-Phi[Kooo] )/sqr(a_t) );
 #if (withEnergyPS==1)
-          Delta[Kooo] = (0.5*sqr(Pi[Kooo]) +  sqr( Phi[Kuoo]-Phi[Kooo] )/sqr(a_t) + sqr( Phi[Kouo]-Phi[Kooo] )/sqr(a_t) + sqr( Phi[Koou]-Phi[Kooo] )/sqr(a_t) );
+          Delta[Kooo] = (0.5*sqr(Pi[Kooo]) +  0.5*sqr( Phi[Kuoo]-Phi[Kooo] )/sqr(a_t) + 0.5*sqr( Phi[Kouo]-Phi[Kooo] )/sqr(a_t) + 0.5*sqr( Phi[Koou]-Phi[Kooo] )/sqr(a_t) );
 #if (expansion==1)
           Delta[Kooo] += (0.5*sqr(H_0 / scale_factor)*sqr(Phi[Kooo]) - Phi[Kooo] * Pi[Kooo] * H_0 / scale_factor);
 #endif
@@ -495,10 +509,19 @@ void CalculateVolumeAverages()
 #endif
 #if (theory==4)
 #if (expansion==0)
+#if (relicpockets ==0)
 	        if (a==0)
 	          Interaction+=(Mass_Mode)*0.5*BareM_sqr_long*sqr(Phi[Kooo]);
 	        else
 	          Interaction+=(Mass_Mode)*0.5*BareM_sqr_trans*sqr(Phi[Kooo]);	  
+#endif
+#if (relicpockets ==1)
+	        if (a==0)
+            Interaction+=0.5*BareM_sqr_long*Phi[Kooo]*Phi[Kooo] - g*Phi[Kooo]*Phi[Kooo]*Phi[Kooo]/6. + Phi[Kooo]*Phi[Kooo]*Phi[Kooo]*Phi[Kooo]/24. + 0.5 * M_axion_sqr * 0.5*(1+tanh((Phi[Kooo]-phimax)/Deltaphi))*Phi[Kooo+1]*Phi[Kooo+1];
+	    //      Interaction+=0.5*BareM_sqr_long*Phi[Kooo]*Phi[Kooo] - g*Phi[Kooo]*Phi[Kooo]*Phi[Kooo]/6. + Phi[Kooo]*Phi[Kooo]*Phi[Kooo]*Phi[Kooo]/24. + exp(a_xi*(Phi[Kooo]-2.))*Phi[Kooo+1]*Phi[Kooo+1];
+	        else
+	          Interaction+=0;	  
+#endif
 #endif
 #if (expansion==1)
           if (a==0)
@@ -598,12 +621,14 @@ void CalculateVolumeAverages()
 	      Interaction+= sqr(scale_factor*scale_factor*BareM_sqr_long)*(1.-cos( sqrt(locPhiSqr)/(scale_factor*sqrt(BareM_sqr_long)) ));
 #endif
 #endif
+#if (relicpockets == 0)
 #if (theory==4)
 #if (expansion==0)
 	      Interaction += (((-g*locPhi*locPhiSqr) / (6.0)) + (Lambda_Mode)*(sqr(locPhiSqr) / (24.0*Nc)));
 #endif
 #if (expansion==1)
 	      Interaction+=(((-g*scale_factor*locPhi*locPhiSqr) / (6.0)) + (Lambda_Mode)*(sqr(locPhiSqr) / (24.0*Nc)));
+#endif
 #endif
 #endif
 #if (theory==5)
@@ -622,6 +647,9 @@ void CalculateVolumeAverages()
   }
 
   Charge = (0.5*pi2 - GradPhiSqr/6. - Interaction);
+#if (relicpockets==1)
+  Charge = (0.5*pi2 + 0.5*GradPhiSqr); //I compute the energy of the axion, but right now it is wrong
+#endif
   Energy = (0.5*pi2 + 0.5*GradPhiSqr + Interaction);
 #if (expansion==1)
   Energy +=(0.5*phi2*sqr(H_0/scale_factor) - phipi*H_0/scale_factor );

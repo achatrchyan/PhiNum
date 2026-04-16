@@ -18,6 +18,7 @@
 #include "filter.cpp"
 #include "visualize.cpp"
 #include "statistics.cpp"
+
 int main(int argc, char **argv)
 {
 // start MPI and put out the number of processes involved
@@ -82,10 +83,17 @@ int main(int argc, char **argv)
       if (numeric::total_stepcount%5==0)
       	Full_Analysis();
 #endif
-      if (false_vacuum_decayed())
+/*      if (false_vacuum_decayed())
       {
           add_stat_time();
           break;
+      }*/
+      if (numeric::total_stepcount%20==0)
+      {
+	      point P;// = quick_point();
+	      P.id = 0;
+	      P.pos = N_t*N_t*N_t/4;
+	      Print2Dz_Full(P);
       }
       Print_fp();
     }   

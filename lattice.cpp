@@ -97,6 +97,9 @@ namespace LocalLattice
     
     counterMsqr_long = 0., BareM_sqr_long = M_sqr;
     counterMsqr_trans = 0., BareM_sqr_trans = M_sqr;
+#if (relicpockets==1)
+    BareM_sqr_trans = 0;
+#endif
 #if (theory==3)
     BareM_mono_sqr_long=M_mono_sqr;
     BareM_mono_sqr_trans=M_mono_sqr;
