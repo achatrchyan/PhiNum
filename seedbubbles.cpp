@@ -121,6 +121,10 @@ double interp_phi(double r, BounceProfile *bp)
     int i = (int)(r / bp->dr);
 
     // safety correction (in case of slight non-uniformity)
+    while (i >= 0 && bp->r[i] > r)
+        i--;
+
+    // safety correction (in case of slight non-uniformity)
     while (i < bp->N - 1 && bp->r[i+1] < r)
         i++;
 
@@ -240,7 +244,7 @@ double periodic_delta(double dx, double L)
     return dx;
 }
 
-void initialize_bubbles(Point *points, int Np, BounceProfile *bp)
+void initialize_bubbles(Point *points, int Np, BounceProfile *bp, double wall_r, double pocket_wall_r)
 {
     double L = N_t * a_t;
     double phi_vac = bp->phi[bp->N - 1];   // ✅ important!
@@ -262,10 +266,17 @@ void initialize_bubbles(Point *points, int Np, BounceProfile *bp)
             double dz = periodic_delta(zp - points[p].z, L);
 
             double r = sqrt(dx*dx + dy*dy + dz*dz);
+#if (seedbubbles == 1)
+            double r_from_pocket_wall = pocket_wall_r - r;
 
+            Phi[Kooo] += interp_phi(wall_r + r_from_pocket_wall, bp) - phi_vac;   // or overwrite if preferred
+            Phi[Kooo+1] *= interp_chi_factor(wall_r + r_from_pocket_wall, bp);  // apply chi factor
+            Pi[Kooo+1] *= interp_chi_factor(wall_r + r_from_pocket_wall, bp);  // apply chi factor
+#else
             Phi[Kooo] += interp_phi(r, bp) - phi_vac;   // or overwrite if preferred
             Phi[Kooo+1] *= interp_chi_factor(r, bp);  // apply chi factor
             Pi[Kooo+1] *= interp_chi_factor(r, bp);  // apply chi factor
+#endif
         }
     }
 }

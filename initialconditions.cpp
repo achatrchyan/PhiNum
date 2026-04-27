@@ -686,6 +686,9 @@ void SetInitialConditions()
 
 	double phi_mid = 0.5 * (bp.phi[0] + bp.phi[bp.N - 1]);
 	double wall_r = 0.0;
+#if (seedpockets==1)
+	double pocket_wall_r = 20.;
+#endif
 	for (int j = 0; j < bp.N; j++)
 	   	if (bp.phi[j] < phi_mid)
     	{
@@ -693,9 +696,12 @@ void SetInitialConditions()
         	break;
     	}
 	
-	int N_bubbles = 5;                 // your choice
+	int N_bubbles = 1;                 // your choice
 	double L = N_t * a_t;
 	double d_min = 3.*wall_r;
+#if (seedpockets==1)
+	d_min = 3.* pocket_wall_r;
+#endif
 
 	Point *points = new Point[N_bubbles];
 
@@ -704,7 +710,11 @@ void SetInitialConditions()
 	if (ID==0)
 		cout << "Initializing bubbles...\n";
 
-	initialize_bubbles(points, N_bubbles, &bp);
+#if (seedpockets==1)
+	initialize_bubbles(points, N_bubbles, &bp, wall_r, pocket_wall_r);
+#else
+	initialize_bubbles(points, N_bubbles, &bp, 0, 0);
+#endif
 	MPI_Barrier(MPI_COMM_WORLD);
 	delete[] points;
 	free_bounce_profile(&bp);

@@ -76,6 +76,7 @@ int runID;
 #define islanddetect 0
 #define EnergybasedID 0 //to tag the islands based on their energy density or not (relevant only if withEnergyPS==1)
 #define relicpockets 1
+#define seedpockets 1
 
 // MPI
 int nodes;		// all CPUs used
@@ -155,7 +156,7 @@ int Lambda_Mode = 1;			// 1 - positive, -1 - negative, 0 - 0 coupling
 pseudo_double Lambda = 1;		// value of Lambda
 
 					//cubic interaction
-pseudo_double g = 2.;
+pseudo_double g = 1.75;
 
 #if (relicpockets == 1)
 pseudo_double a_xi = 0.5;
@@ -191,7 +192,7 @@ pseudo_double H_I=F_SSB*1e-5; //Hubble scale of inlfation
 // Specifying Lattice --------------------------------------------------------------
 
 //Spatial Lattice parameters
-int N_t = 256;
+int N_t = 512;
 pseudo_double a_t=0.1;		// spatial lattice spacing in the transverse direction
 
 pseudo_double a_eta;
@@ -304,7 +305,7 @@ pseudo_double scale2=0.;	// second scale for vacuum fluctuations (proper renorma
 
 pseudo_double Amplitude=0.;	// amplitude parameter
 #if (relicpockets==1)
-pseudo_double Amplitude2=70.;	// amplitude parameter
+pseudo_double Amplitude2=78.;	// amplitude parameter
 #endif
 pseudo_double chi=1.;		// anisotropy parameter
 pseudo_double Noise=0.0;	// vacuum amplitude,  NOTE: measured NOT in orders of 1/lambda but in O(1)!
