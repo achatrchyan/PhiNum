@@ -266,7 +266,7 @@ void initialize_bubbles(Point *points, int Np, BounceProfile *bp, double wall_r,
             double dz = periodic_delta(zp - points[p].z, L);
 
             double r = sqrt(dx*dx + dy*dy + dz*dz);
-#if (seedbubbles == 1)
+#if (seedpockets == 1)
             double r_from_pocket_wall = pocket_wall_r - r;
 
             Phi[Kooo] += interp_phi(wall_r + r_from_pocket_wall, bp) - phi_vac;   // or overwrite if preferred
