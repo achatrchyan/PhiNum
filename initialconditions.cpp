@@ -686,9 +686,6 @@ void SetInitialConditions()
 
 	double phi_mid = 0.5 * (bp.phi[0] + bp.phi[bp.N - 1]);
 	double wall_r = 0.0;
-#if (seedpockets==1)
-	double pocket_wall_r = 20.;
-#endif
 	for (int j = 0; j < bp.N; j++)
 	   	if (bp.phi[j] < phi_mid)
     	{

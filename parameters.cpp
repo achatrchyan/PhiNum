@@ -163,6 +163,11 @@ pseudo_double a_xi = 0.5;
 pseudo_double phimax = 2.7;
 pseudo_double Deltaphi = 0.2;
 pseudo_double M_axion_sqr = 1000.;
+
+#if (seedpockets==1)
+pseudo_double pocket_wall_r = 20.;
+#endif
+
 #endif
 
 
