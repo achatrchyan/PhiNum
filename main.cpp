@@ -88,13 +88,8 @@ int main(int argc, char **argv)
           add_stat_time();
           break;
       }*/
-      if (numeric::total_stepcount%20==0)
-      {
-	      point P;// = quick_point();
-	      P.id = 0;
-	      P.pos = N_t*N_t*N_t/4;
-	      Print2Dz_Full(P);
-      }
+      if (numeric::total_stepcount%200==0)
+        Print2Dz_Full(quick_point());
       Print_fp();
     }   
 #if (islanddetect == 1)  

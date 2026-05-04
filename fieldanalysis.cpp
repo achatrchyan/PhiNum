@@ -37,8 +37,8 @@ struct point
 point quick_point()
 {
    point P;
-   P.id =0 ;
-   P.pos = (N_t/2)*(N_t/2)*(N_t/2);
+   P.id = 0;
+   P.pos = Nc*N_t*N_t + Nc*N_t*N_t/2 + Nc*N_t/2;
    return P;
 }
 

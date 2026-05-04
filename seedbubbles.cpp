@@ -185,6 +185,14 @@ int generate_points(Point *points, int N, double L, double d_min)
     int max_attempts = 10000000;
     int attempts = 0;
 
+    if (N==1) 
+    {
+        points[0].x = L/2.;
+        points[0].y = L/2.;
+        points[0].z = 0.;
+        return 1;
+    }
+
     while (count < N && attempts < max_attempts) 
     {
         attempts++;
