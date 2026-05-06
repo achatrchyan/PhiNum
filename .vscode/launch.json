@@ -35,10 +35,10 @@
 
             "preLaunchTask": "Build Release",
 
-            "program": "/bin/bash",
+            "program": "mpirun",
             "args": [
-                "-c",
-                "mpirun -np 4 ${fileDirname}/${fileBasenameNoExtension}"
+                "-np", "4",
+                "${fileDirname}/${fileBasenameNoExtension}"
             ],
 
             "cwd": "${workspaceFolder}",

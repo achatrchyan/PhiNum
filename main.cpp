@@ -88,7 +88,7 @@ int main(int argc, char **argv)
           add_stat_time();
           break;
       }*/
-      if (numeric::total_stepcount%200==0)
+      if (numeric::total_stepcount%20==0)
         Print2Dz_Full(quick_point());
       Print_fp();
     }   

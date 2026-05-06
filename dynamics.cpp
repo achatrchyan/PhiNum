@@ -145,7 +145,21 @@ void updateMomenta()
 #endif
 #if (relicpockets == 1)
           if (a == 0)
-		        Pi[Kooo] += (LapPhi - ( BareM_sqr_long - g* Phi[Kooo] / 2. + (Phi[Kooo]*Phi[Kooo] / 6.) ) * Phi[Kooo] - 0.25*M_axion_sqr/Deltaphi/cosh((Phi[Kooo]-phimax)/Deltaphi)/cosh((Phi[Kooo]-phimax)/Deltaphi)*Phi[Kooo + 1]*Phi[Kooo+1] )    *   (tau - Last_Momenta_update);
+          {
+            if (tau<tau_static_window)
+            {
+      /*        if (normal_stepcount==0)
+              {
+                Pi[Kooo] = Phi[Kooo]/100.;
+                Phi[Kooo] = 0;
+              }*/
+		          Pi[Kooo] +=0;
+        /*      if (tau + dtau>100.)
+                Pi[Kooo] = 0;*/
+            }
+            else
+              Pi[Kooo] += (LapPhi - ( BareM_sqr_long - g* Phi[Kooo] / 2. + (Phi[Kooo]*Phi[Kooo] / 6.) ) * Phi[Kooo] - 0.25*M_axion_sqr/Deltaphi/cosh((Phi[Kooo]-phimax)/Deltaphi)/cosh((Phi[Kooo]-phimax)/Deltaphi)*Phi[Kooo + 1]*Phi[Kooo+1] )    *   (tau - Last_Momenta_update);
+          }
 //		        Pi[Kooo] += (LapPhi - ( BareM_sqr_long - g* Phi[Kooo] / 2. + (Phi[Kooo]*Phi[Kooo] / 6.) ) * Phi[Kooo] - exp(a_xi*(Phi[Kooo]-2.))*a_xi*Phi[Kooo + 1]*Phi[Kooo+1] )    *   (tau - Last_Momenta_update);
 	        else
 		        Pi[Kooo] += (LapPhi - M_axion_sqr * 0.5*(1+tanh((Phi[Kooo-1]-phimax)/Deltaphi)) * Phi[Kooo] )   *   (tau - Last_Momenta_update);

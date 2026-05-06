@@ -413,9 +413,10 @@ void CalculateVolumeAverages()
   
   Interaction = 0.;
   Charge=0.;
+  Charge2=0.;
 
   pseudo_double GradPhiSqr=0.0;
-  pseudo_double GradChiSqr = 0., ChiSqr = 0.;
+  pseudo_double GradChiSqr = 0., ChiSqr = 0., R_vol = 0.;
 
   int Kooo=pos(0,0,1);
   
@@ -447,6 +448,7 @@ void CalculateVolumeAverages()
           {
             GradChiSqr +=  ( sqr( Phi[Kuoo]-Phi[Kooo] )/sqr(a_t) + sqr( Phi[Kouo]-Phi[Kooo] )/sqr(a_t) + sqr( Phi[Koou]-Phi[Kooo] )/sqr(a_t) );
             ChiSqr += sqr(Phi[Kooo]);
+            R_vol += (a_t*a_t*a_t);
           }
 #endif          
           GradPhiSqr+= ( sqr( Phi[Kuoo]-Phi[Kooo] )/sqr(a_t) + sqr( Phi[Kouo]-Phi[Kooo] )/sqr(a_t) + sqr( Phi[Koou]-Phi[Kooo] )/sqr(a_t) );
@@ -642,6 +644,7 @@ void CalculateVolumeAverages()
   Charge = (0.5*pi2 - GradPhiSqr/6. - Interaction);
 #if (relicpockets==1)
   Charge = GradChiSqr;
+  Charge2 = R_vol;
 #endif
   Energy = (0.5*pi2 + 0.5*GradPhiSqr + Interaction);
 #if (relicpockets ==1)
@@ -655,6 +658,7 @@ void CalculateVolumeAverages()
   Energy /= (vol);
   Interaction /= (vol);
   Charge/=(vol);
+//  Charge2/=(vol);
 
   phi2/=(vol);		pi2/=(vol);
   phi4/=(vol);
@@ -670,6 +674,7 @@ void CalculateVolumeAverages()
   avgphi6=0.;
   avgphipi=0;
   avgCharge=0.;
+  avgCharge2=0.;
   
   for (int a=0; a<Nc; a++)
   {
@@ -682,6 +687,7 @@ void CalculateVolumeAverages()
   MPI_Reduce(&Energy, &avgEnergy, 1, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
   MPI_Reduce(&Interaction, &avgInteraction, 1, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
   MPI_Reduce(&Charge, &avgCharge, 1, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&Charge2, &avgCharge2, 1, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
   MPI_Reduce(phi, avgphi, Nc, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
   MPI_Reduce(pi, avgpi, Nc, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
   MPI_Reduce(&phi2, &avgphi2, 1, MPI_PSEUDO_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
@@ -695,6 +701,7 @@ void CalculateVolumeAverages()
     avgEnergy/=(nodes);
     avgInteraction/=(nodes);
     avgCharge/=(nodes);
+ //   avgCharge2/=(nodes);
     avgpi2/=(nodes);
     avgphi2/=(nodes);
     avgphi4/=(nodes);
@@ -713,6 +720,7 @@ void CalculateVolumeAverages()
   MPI_Bcast(&avgEnergy, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
   MPI_Bcast(&avgInteraction, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
   MPI_Bcast(&avgCharge, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&avgCharge2, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
   MPI_Bcast(avgphi, Nc, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
   MPI_Bcast(avgpi, Nc, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
   MPI_Bcast(&avgphi2, 1, MPI_PSEUDO_DOUBLE, 0, MPI_COMM_WORLD);
@@ -819,8 +827,7 @@ void Print_AveragesExtrema()
     for (int i=0;i<Nc;i++)
       SpatialObs<<avgphi[i]<<' '<<avgpi[i]<<' ';
     SpatialObs<<avgphi2<<' '<<avgpi2<<' '<<avgphipi<<' '<<avgphi4<<' '<<avgphi6<<' ';		//average field squared
-    SpatialObs<<avgEnergy<<' '<<avgInteraction<<' '<<avgCharge<<' ';
-    
+    SpatialObs<<avgEnergy<<' '<<avgInteraction<<' '<<avgCharge<<' '<<avgCharge2<<' ';
     SpatialObs<<GlminPhi<<' '<<GlmaxPhi<<' '<<GlmaxAbsPhi<<endl;
   }
 }
@@ -869,7 +876,7 @@ void Print_Averages()
     for (int i=0;i<Nc;i++)
       SpatialObs<<avgphi[i]<<' '<<avgpi[i]<<' ';	//average field components
     SpatialObs<<avgphi2<<' '<<avgpi2<<' '<<avgphipi<<' '<<avgphi4<<' '<<avgphi6<<' ';		//average field squared
-    SpatialObs<<avgEnergy<<' '<<avgInteraction<<' '<<avgCharge<<endl;
+    SpatialObs<<avgEnergy<<' '<<avgInteraction<<' '<<avgCharge<<' '<<avgCharge2<<endl;
   }
 }
 

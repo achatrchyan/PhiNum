@@ -38,7 +38,7 @@ namespace LocalLattice
   pseudo_double phi4, phi6;
   pseudo_double phipi;
   
-  pseudo_double Energy, Interaction, Charge;
+  pseudo_double Energy, Interaction, Charge, Charge2;
   
 //Averaged over nodes
   pseudo_double *avgphi, *avgpi; 
@@ -46,7 +46,7 @@ namespace LocalLattice
   pseudo_double avgphi4, avgphi6;
   pseudo_double avgphipi;
   
-  pseudo_double avgEnergy, avgInteraction, avgCharge;
+  pseudo_double avgEnergy, avgInteraction, avgCharge, avgCharge2;
   
 //Extremal values of the classical Field - over local lattice
   pseudo_double maxPhi,minPhi,maxAbsPhi;

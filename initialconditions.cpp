@@ -692,7 +692,10 @@ void SetInitialConditions()
         	wall_r = bp.r[j];
         	break;
     	}
-	
+	//test smoothening
+	for (int j = 0; j < bp.N; j++)
+		bp.chi_factor[j] *= tanh( (wall_r- j*bp.dr)*(wall_r- j*bp.dr)*QS*QS/6.);
+	//end of test	
 	int N_bubbles = 1;                 // your choice
 	double L = N_t * a_t;
 	double d_min = 3.*wall_r;
