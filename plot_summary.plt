@@ -30,29 +30,28 @@ set cbrange [0:20]
 set title 'Axion energy density'
 plot sprintf("%s/2dz-%d.txt", base, nframes) u 1:2:6 w image t ''
 
-set title sprintf("momentum distribution")
+set title sprintf("Momentum distribution")
 set xlabel 'p'
 set ylabel 'f(p)xp^4'
 set key bottom left
 set log
 unset cbrange
 plot \
-  sprintf("%s/Distrib-1-0.txt", base)                   u 1:6 w l lw 2 t 't=0', \
-  sprintf("%s/Distrib-1-%d.txt", base, latest_distrib)  u 1:6 w l lw 2 t sprintf("t=%d", latest_distrib)
+  sprintf("%s/Distrib-1-0.txt", base)                   u 1:($6*$1**4) w l lw 2 t 't=0', \
+  sprintf("%s/Distrib-1-%d.txt", base, latest_distrib)  u 1:($6*$1**4) w l lw 2 t sprintf("t=%d", latest_distrib)
 
 # --- Panel 3: SO file, col 1 vs col ?? ---
 unset log
 unset key
-set title 'Pocket volume'
+set title 'Pocket radius'
 set xlabel 't'
-set ylabel 'col ?'         # <-- change ylabel
-plot sprintf("%s/SO-1.txt", base) u 1:14 w l lw 2 t ''   # <-- change :2 to your column
+unset ylabel
+plot sprintf("%s/SO-1.txt", base) u 1:(($14*3./4./acos(-1.))**(1./3.)) w l lw 2 t ''
 
 # --- Panel 4: SO file, col 1 vs col ?? ---
-set title 'Energy'
+set title 'Total energy'
 set xlabel 't'
-set ylabel 'col ?'         # <-- change ylabel
-plot sprintf("%s/SO-1.txt", base) u 1:11 w l lw 2 t ''   # <-- change :3 to your column
+plot sprintf("%s/SO-1.txt", base) u 1:11 w l lw 2 t ''
 
 
 unset multiplot

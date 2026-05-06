@@ -13,8 +13,8 @@
                 "${file}",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}_debug",
-                "-lfftw3_mpi",
-                "-lfftw3",
+                "-lfftw3_mpi","-lfftw3f_mpi","-lfftw3l_mpi",
+                "-lfftw3","-lfftw3f","-lfftw3l",
                 "-lm"
             ],
             "problemMatcher": ["$gcc"],
@@ -34,8 +34,8 @@
                 "${file}",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
-                "-lfftw3_mpi",
-                "-lfftw3",
+                "-lfftw3_mpi", "-lfftw3f_mpi", "-lfftw3l_mpi",
+                "-lfftw3", "-lfftw3f", "-lfftw3l",
                 "-lm"
             ],
             "problemMatcher": ["$gcc"],

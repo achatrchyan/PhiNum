@@ -46,11 +46,11 @@ namespace randGen
 		while(accept==0){
 			x=2.0*rng()-1.0; y=2.0*rng()-1.0;
 			r=sqrt(sqr(x)+sqr(y));
-			if(r<1.0){accept=1;}
+			if(r<1.0 && r>1e-7){accept=1;}
 		}
-		c=x/r; s=y/r;
-		gauss1=c*sqrt(-2.0*log(sqr(r)));
-		gauss2=(s/c)*gauss1;
+		pseudo_double mag = sqrt(-2.0*log(sqr(r)));
+		gauss1=x/r*mag;
+		gauss2=y/r*mag;
 		on=1; return gauss1;
 	}
 }

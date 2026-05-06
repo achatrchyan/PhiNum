@@ -1,6 +1,5 @@
 # Ignore output data directories created by the simulation
 output/
-.vscode/
 
 # Ignore run counter state
 lastrun.txt
